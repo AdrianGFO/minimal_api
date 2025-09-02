@@ -181,7 +181,7 @@ app.MapPost("/Administradores", ([FromBody] AdministradorDTO administradorDTO, i
     {
         Email = administradorDTO.Email,
         Senha = administradorDTO.Senha,
-        Perfil = administradorDTO.Perfil?.ToString() ?? Perfil.editor.ToString()
+        Perfil = administradorDTO.Perfil?.ToString() ?? Perfil.Editor.ToString()
 
     };
     administradorServico.Incluir(administrador);
@@ -197,7 +197,7 @@ app.MapPost("/Administradores", ([FromBody] AdministradorDTO administradorDTO, i
 
 
 //?
-app.MapGet("Administradores/{id}", ([FromRoute] int id, iAdministradorServico administradorServico) =>
+app.MapGet("Administradores/{Id}", ([FromRoute] int id, iAdministradorServico administradorServico) =>
 {
     var administrador = administradorServico.BuscarPorId(id);
     if (administrador == null) return Results.NotFound();
@@ -249,7 +249,7 @@ app.MapPost("/veiculos", ([FromBody] VeiculoDTO veiculoDTO, IVeiculoServico veic
 
     return Results.Created($"/veiculo/{veiculo.Id}", veiculo);
 }).RequireAuthorization()
-.RequireAuthorization(new AuthorizeAttribute {Roles = "Adm, Editor"})
+.RequireAuthorization(new AuthorizeAttribute {Roles = "Adm,Editor"})
 .WithTags("Veiculos");
 
 
@@ -258,7 +258,9 @@ app.MapGet("/veiculos", ([FromQuery] int pagina, IVeiculoServico veiculoServico)
 {
     var veiculo = veiculoServico.Todos(pagina);
     return Results.Ok(veiculo);
-}).RequireAuthorization().WithTags("Veiculos");
+}).RequireAuthorization()
+.RequireAuthorization(new AuthorizeAttribute {Roles = "Adm,Editor"})
+.WithTags("Veiculos");
 
 //Busca o Veiculo pelo Id
 app.MapGet("/veiculos/search/{id}", ([FromRoute] int id, IVeiculoServico veiculoServico) =>
@@ -269,7 +271,7 @@ app.MapGet("/veiculos/search/{id}", ([FromRoute] int id, IVeiculoServico veiculo
 
     return Results.Ok(veiculo);
 }).RequireAuthorization()
-.RequireAuthorization(new AuthorizeAttribute {Roles = "Adm, Editor"})
+.RequireAuthorization(new AuthorizeAttribute {Roles = "Adm,Editor"})
 .WithTags("Veiculos");
 
 //Atualiza dados de um veiculo por seu id.
